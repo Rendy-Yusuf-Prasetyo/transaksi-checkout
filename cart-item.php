@@ -17,6 +17,13 @@
     ON a.ID_BARANG = b.ID_BARANG WHERE ID_CART = '$id_cart'"));
     // echo $total;
 
+    // if (isset($_POST['lanjutkan'])) {
+    //     $banyak = $_POST['banyak']; 
+    //     while($row = mysqli_fetch_assoc($query_join)) {
+    //       $total = $row['HARGA'] * $row['banyak'];
+    //       mysqli_query($db, "UPDATE CART SET `GRAND_TOTAL` = '$total' WHERE `cart`.`ID_CART` = '$id'");
+    //     }
+    //   }
     
 
     $jumlah = 0;
@@ -26,27 +33,64 @@
             // return $data;
             $jumlah = $jumlah+$data;
         }
-        echo "HASILNYA" . $jumlah;
-
+        // echo "HASILNYA" . $jumlah;
         
 
     // $id_user = $_GET['id_user'];
-    
+    // Cek id cart
+
     var_dump($id_cart);
     $id = $_GET['id'];
-    var_dump($id);
+    echo "<br>";
+    echo " Ini ID = ".$id;
     $cek_id = $id;
-    while($row = mysqli_fetch_assoc($query_cek_id_item) ){
-        $cek_id_barang = $row['ID_BARANG'];
-        var_dump($cek_id_barang);
+    
+    if ($cek_id_barang !== $id){
+        while($row = mysqli_fetch_assoc($query_cek_id_item) ){
+            // var_dump($cek_id_barang);
+            echo "<br>";
+                if ($cek_id_barang === $id){
+                    break;
+                }
+    
+                $cek_id_barang = $row['ID_BARANG'];
+                echo " ID_BARANG = " .$cek_id_barang;
+            }
     }
-    if ($cek_id_barang != $id) {
-        mysqli_query($db, "INSERT INTO CART_ITEM VALUES('','$id_cart','$id','')");
-        echo "<H5>Sukses Update</H5>";
+    echo "<br>";
+    echo "<br>";
+
+if(isset($_POST['tmbh_keranjang'])){
+    $quantity = 1;
+    if ($id != $cek_id_barang || $id == null) {
+        mysqli_query($db, "INSERT INTO CART_ITEM VALUES('','$id_cart','$id','$quantity')");
+
+        echo "ID_BARANG JADI = " .$cek_id_barang;
+        echo "<br>";
+        echo "ID JADI = " .$id;
+        // var_dump($cek_id_barang);
+        
+        // var_dump($id);
+            echo "<H5>Sukses Update</H5>";
+            
     }else{
+        echo "ID_BARANG JADI = " .$cek_id_barang;
+        echo "<br>";
+        echo "ID JADI = " .$id;
+        // var_dump($cek_id_barang);
+        
+        // var_dump($id);
+        
+        while($cek_id_barang){
+            $quantity++;
+            mysqli_query($db, "UPDATE CART_ITEM SET QUANTITY = '$quantity' WHERE ID_BARANG = '$id'");
+        }
+        
         echo "<H5>Gagal Update</H5>";
     }
+}
 
+    
     // var_dump($row['ID_CART_ITEM']);
     // if ($cek_id_barang != $id) {
     //     mysqli_query($db, "INSERT INTO CART_ITEM VALUES('','','$id','1')");
@@ -55,9 +99,8 @@
     // var_dump($_GET['id']);
     // $query = mysqli_fetch_assoc($db, "SELECT * FROM cart_item");
 
-    
-    
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -116,9 +159,9 @@
 
 <div class="container mb-4">
     <div class="row">
-        <form action="checkout.php" method="post">
-            <div class="col-12">
-                <div class="table-responsive">
+        <div class="col-12">
+            <div class="table-responsive">
+                <form action="" method="post">
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -140,7 +183,7 @@
                                 <td><img src="https://dummyimage.com/50x50/55595c/fff" /> </td>
                                 <td><?= $row['NAMA_BARANG']; ?></td>
                                 <td><?= $row['STOK']; ?></td>
-                                <td><input class="form-control" type="text" name="banyak" /></td>
+                                <td><input class="form-control" type="text" name="banyak" id="banyak"/></td>
                                 <!-- <td><input type="text" name="quantity"></td> -->
                                 <td class="text-right">Rp.<?= $row['HARGA'] ?></td>
                                 <!-- <td></td> -->
@@ -165,22 +208,27 @@
                         </tr>
                         </tbody>
                     </table>
-                </div>
-            </div>
-            <div class="col mb-2">
-                <div class="row">
-                    <!-- <div class="col-sm-12  col-md-6">
-                        <a href="pilih.php"><button class="btn btn-block btn-light">Continue Shopping</button>
-                    </a>    
-                    </div> -->
-                    <div class="col-sm-12 col-md-6 text-right">
+                    <div class="col-sm-12 col-m d-6 text-right">
                         <a href="checkout.php?id_cart=<?= $row_id_cart['ID_CART'] ?>">
                             <button class="btn btn-lg btn-block btn-success text-uppercase"  type="button" name="lanjutkan">Lanjutkan</button>
                         </a>
                     </div>
+                </form>
+            </div>
+        </div>
+        <!-- <div class="col mb-2">
+            <div class="row">
+                <!-- <div class="col-sm-12  col-md-6">
+                    <a href="pilih.php"><button class="btn btn-block btn-light">Continue Shopping</button>
+                </a>    
+                </div> -->
+                <div class="col-sm-12 col-md-6 text-right">
+                    <a href="checkout.php?id_cart=<?= $row_id_cart['ID_CART'] ?>">
+                        <button class="btn btn-lg btn-block btn-success text-uppercase"  type="button" name="lanjutkan">Lanjutkan</button>
+                    </a>
                 </div>
             </div>
-        </form>
+        </div> -->
     </div>
 </div>
 

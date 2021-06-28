@@ -188,37 +188,38 @@ if(isset($_GET['id_user'])){
                 <?php $id = $row_lagi['ID_BARANG']; ?>
                 
                 
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-                        <h5></h5>
-                        <div class="card-body">
-                            <h5><?= $row['NAMA_BARANG']; ?></h5>
-                            <h2><?= $row['ID_BARANG']; ?></h2>
-                        <p class="card-text"><?= $row['DESKRIPSI']; ?></p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <!-- <form action="cart-item.php" method="post"> -->
-                                    <a href="cart-item.php?id=<?= $row['ID_BARANG'] ?>">
-                                        <button type="submit" name="tmbh_keranjang" class="btn btn-sm btn-outline-secondary me-3" data-bs-toggle="modal" data-bs-target="#keranjang">+ Keranjang</button>
-                                    </a>
-                                <!-- </form> -->
-                                    <a href="editlagi.php?id=<?= $row['ID_BARANG'] ?>">
-                                        <button type="submit" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#edit">Edit</button>
-                                    </a>
-                                    <!-- <a href="delete-barang.php?id_barang=<?= $row['ID_BARANG']; ?>" class="btn btn-danger">Hapus</a> -->
-                                    <!-- <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#hapus">Hapus</button> -->
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+                            <h5></h5>
+                            <div class="card-body">
+                                <h5><?= $row['NAMA_BARANG']; ?></h5>
+                                <h2><?= $row['ID_BARANG']; ?></h2>
+                            <p class="card-text"><?= $row['DESKRIPSI']; ?></p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <form action="cart-item.php?id=<?= $row['ID_BARANG'] ?>" method="post">
+                                        <a href="cart-item.php?id=<?= $row['ID_BARANG'] ?>">
+                                            <button type="submit" name="tmbh_keranjang" class="btn btn-sm btn-outline-secondary me-3" data-bs-toggle="modal" data-bs-target="#keranjang">+ Keranjang</button>
+                                        </a>
+                                    </form>
+                                        <a href="editlagi.php?id=<?= $row['ID_BARANG'] ?>">
+                                            <button type="submit" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#edit">Edit</button>
+                                        </a>
+                                        <!-- <a href="delete-barang.php?id_barang=<?= $row['ID_BARANG']; ?>" class="btn btn-danger">Hapus</a> -->
+                                        <!-- <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#hapus">Hapus</button> -->
+                                </div>
+                                
+                                <small class="text-muted">Sisa: <?= $row['STOK'] ?></small>
                             </div>
-                            
-                            <small class="text-muted">Sisa: <?= $row['STOK'] ?></small>
+                            </div>
+                            <?php 
+                                $query_tambah = mysqli_query($db, "INSERT INTO CART VALUES('','$id','10000')");
+                            ?>
                         </div>
-                        </div>
-                        <?php 
-                            $query_tambah = mysqli_query($db, "INSERT INTO CART VALUES('','$id','10000')");
-                        ?>
                     </div>
-                </div>
-                <?php endwhile; ?>
+                    <?php endwhile; ?>
+                
             </div>
             
             <!-- Modal -->

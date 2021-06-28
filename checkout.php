@@ -29,13 +29,16 @@ if (isset($_POST['lanjutkan'])) {
 
   $query_join = mysqli_query($db, "SELECT * FROM CART_ITEM a JOIN BARANG b ON a.ID_BARANG = b.ID_BARANG");
   
+
   if (isset($_POST['lanjutkan'])) {
-    $banyak = $_POST['quantity']; 
+    $banyak = $_POST['banyak']; 
     while($row = mysqli_fetch_assoc($query_join)) {
-      $total = $row['HARGA'] * $row['QUANTITY'];
-      mysqli_query($db, "UPDATE `cart` SET `GRAND_TOTAL` = '$total' WHERE `cart`.`ID_CART` = '$id'");
+      $total = $row['HARGA'] * $row['banyak'];
+      mysqli_query($db, "UPDATE CART_ITEM SET QUANTITY = '$total' WHERE ID_CART_ITEM = '$id'");
     }
   }
+  var_dump($_POST['banyak']);
+  
 
   $jumlah = 0;
   $jumlah_1 = mysqli_query($db, "SELECT * FROM BARANG a JOIN CART_ITEM b ON a.ID_BARANG = b.ID_BARANG WHERE ID_CART = '$id'");
