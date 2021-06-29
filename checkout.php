@@ -1,6 +1,59 @@
 <?php 
 include "config.php";
+$id = $_GET['id_cart'];
+
 $query_cek_id_item = mysqli_query($db, "SELECT * FROM CART_ITEM");
+
+$query_join = mysqli_query($db, "SELECT * FROM CART_ITEM a JOIN BARANG b ON a.ID_BARANG = b.ID_BARANG WHERE a.ID_CART = '$id'");
+if (isset($_POST['lanjutkan'])) {
+  // $banyak = $_POST['banyak']; 
+  // while($row = mysqli_fetch_assoc($query_join)) {
+  //   $total = $row['HARGA'] * $banyak;
+  //   mysqli_query($db, "UPDATE CART_ITEM SET QUANTITY = '$total' WHERE ID_CART_ITEM = '$id'");
+  //   var_dump($_POST['banyak']);
+  //   echo " ISI BANYAK: ".$_POST['banyak'];
+  //   echo "<br>";
+  // }
+
+  while($row = mysqli_fetch_assoc($query_join)){
+    $banyak = $_POST['banyak'];
+    // $total = 
+    
+  }
+  // $row = mysqli_fetch_assoc($query_join)
+  $banyak = $_POST['banyak'];
+  mysqli_query($db, "UPDATE CART_ITEM SET QUANTITY = '$banyak' WHERE ID_CART = '$id'");
+  
+}else{
+  $query = mysqli_query($db, "SELECT * FROM BARANG a JOIN PElANGGAN b JOIN TRANSAKSI c ON a.ID_BARANG = b.ID_PElANGGAN = c.ID_TRANSAKSI");
+  $query_ongkir = mysqli_query($db, "SELECT * FROM CART");
+  $row_ongkir = mysqli_fetch_assoc($query_ongkir);
+  $row = mysqli_fetch_assoc($query);
+  $id = $_GET['id_cart'];
+  $row_cart = $row_ongkir['GRAND_TOTAL'];
+  
+  $row_ongkir['GRAND_TOTAL'];
+  // var_dump($id);
+  if (isset($_POST['lanjutkan'])) {
+    $cek = mysqli_query($db, "INSERT INTO TRANSAKSI VALUES('','','$id','')");
+  };
+  
+  
+    $jumlah = 0;
+    $jumlah_1 = mysqli_query($db, "SELECT * FROM BARANG a JOIN CART_ITEM b ON a.ID_BARANG = b.ID_BARANG WHERE ID_CART = '$id'");
+        while ($tabel = mysqli_fetch_assoc($jumlah_1)) {
+            $data = $tabel['HARGA'];
+            // return $data;
+            $jumlah = $jumlah+$data;
+        }
+        echo "HASILNYA" . $jumlah;
+  
+    
+        $total_semua = $row_ongkir['DELIVERY_CHARGE'] + $jumlah;
+  echo $total_semua;
+
+  // echo "ERROR";
+}
 
 
 // if (isset($_POST['banyak'])) {
@@ -14,44 +67,7 @@ $query_cek_id_item = mysqli_query($db, "SELECT * FROM CART_ITEM");
 
 // var_dump($_POST['banyak']);
 
-$query = mysqli_query($db, "SELECT * FROM BARANG a JOIN PElANGGAN b JOIN TRANSAKSI c ON a.ID_BARANG = b.ID_PElANGGAN = c.ID_TRANSAKSI");
-$query_ongkir = mysqli_query($db, "SELECT * FROM CART");
-$row_ongkir = mysqli_fetch_assoc($query_ongkir);
-$row = mysqli_fetch_assoc($query);
-$id = $_GET['id_cart'];
-$row_cart = $row_ongkir['GRAND_TOTAL'];
 
-$row_ongkir['GRAND_TOTAL'];
-// var_dump($id);
-if (isset($_POST['lanjutkan'])) {
-  $cek = mysqli_query($db, "INSERT INTO TRANSAKSI VALUES('','','$id','')");
-};
-
-  $query_join = mysqli_query($db, "SELECT * FROM CART_ITEM a JOIN BARANG b ON a.ID_BARANG = b.ID_BARANG");
-  
-
-  if (isset($_POST['lanjutkan'])) {
-    $banyak = $_POST['banyak']; 
-    while($row = mysqli_fetch_assoc($query_join)) {
-      $total = $row['HARGA'] * $row['banyak'];
-      mysqli_query($db, "UPDATE CART_ITEM SET QUANTITY = '$total' WHERE ID_CART_ITEM = '$id'");
-    }
-  }
-  var_dump($_POST['banyak']);
-  
-
-  $jumlah = 0;
-  $jumlah_1 = mysqli_query($db, "SELECT * FROM BARANG a JOIN CART_ITEM b ON a.ID_BARANG = b.ID_BARANG WHERE ID_CART = '$id'");
-      while ($tabel = mysqli_fetch_assoc($jumlah_1)) {
-          $data = $tabel['HARGA'];
-          // return $data;
-          $jumlah = $jumlah+$data;
-      }
-      echo "HASILNYA" . $jumlah;
-
-  
-      $total_semua = $row_ongkir['DELIVERY_CHARGE'] + $jumlah;
-echo $total_semua;
 ?>
 <!doctype html>
 <html lang="en">

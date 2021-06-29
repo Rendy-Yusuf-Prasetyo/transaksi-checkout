@@ -1,6 +1,71 @@
 <?php 
     include "config.php";
-    // $id = $_GET['id_user'];
+
+    if (isset($_POST['tambah'])) {
+        $query_id_cart = mysqli_query($db, "SELECT * FROM cart");
+        $query_cek_id_cart = mysqli_fetch_assoc($query_id_cart);
+        $id_cart = $query_cek_id_cart['ID_CART'];
+        // $query_sum = mysqli_query($db, "SELECT SUM(a.HARGA) FROM BARANG a JOIN CART_ITEM b 
+        // ON a.ID_BARANG = b.ID_BARANG WHERE ID_CART = '$id_cart'");
+        // $row_sum = mysqli_fetch_assoc($query_sum);
+        // $row_id_cart = mysqli_fetch_assoc($query_id_cart);
+        // $row_cek_id_item = mysqli_fetch_assoc($query_cek_id_item);
+        
+        $total = mysqli_fetch_assoc(mysqli_query($db, "SELECT SUM(a.HARGA), a.STOK, a.ID_BARANG FROM BARANG a JOIN CART_ITEM b 
+        ON a.ID_BARANG = b.ID_BARANG WHERE ID_CART = '$id_cart'"));
+        $jumlah = 0;
+        $jumlah_1 = mysqli_query($db, "SELECT * FROM BARANG a JOIN CART_ITEM b ON a.ID_BARANG = b.ID_BARANG WHERE ID_CART = '$id_cart'");
+            while ($tabel = mysqli_fetch_assoc($jumlah_1)) {
+                $data = $tabel['HARGA'];
+                $jumlah = $jumlah+$data;
+            }
+            
+        $id_tambah = $_GET['id_cart_item'];
+        $query_tambah = mysqli_query($db, "SELECT * FROM CART_ITEM WHERE ID_CART_ITEM = '$id_tambah'");
+        $row_tambah = mysqli_fetch_assoc($query_tambah);
+        $hitung_tambah = $row_tambah['QUANTITY'];
+        $hitung_tambah++;
+        mysqli_query($db, "UPDATE CART_ITEM SET QUANTITY = '$hitung_tambah' WHERE ID_CART_ITEM = '$id_tambah'");
+        // mysqli_query($db, "SELECT sum(b.STOK - a.QUANTITY) FROM CART_ITEM a JOIN BARANG b ON a.ID_BARANG = b.ID_BARANG WHERE ID_CART_ITEM = '$id_tambah'");
+
+            $query_tambah_stok = mysqli_query($db, "SELECT a.ID_BARANG, b.STOK, a.QUANTITY FROM CART_ITEM a JOIN BARANG b ON a.ID_BARANG = b.ID_BARANG WHERE ID_CART_ITEM = '$id_tambah'");
+            $row_tambah_stok = mysqli_fetch_assoc($query_tambah_stok);
+            $id_barang_tambah = $row_tambah_stok['ID_BARANG'];
+
+
+        $total_tambah = ($row_tambah_stok['QUANTITY'] - $row_tambah_stok['STOK']);
+        echo $total_tambah;
+        mysqli_query($db, "UPDATE BARANG SET STOK = '$total_tambah' WHERE ID_BARANG = '$id_barang_tambah'");
+        
+    }else if(isset($_POST['kurang'])){
+        $query_id_cart = mysqli_query($db, "SELECT * FROM cart");
+        $query_cek_id_cart = mysqli_fetch_assoc($query_id_cart);
+        $id_cart = $query_cek_id_cart['ID_CART'];
+        // $query_sum = mysqli_query($db, "SELECT SUM(a.HARGA) FROM BARANG a JOIN CART_ITEM b 
+        // ON a.ID_BARANG = b.ID_BARANG WHERE ID_CART = '$id_cart'");
+        // $row_sum = mysqli_fetch_assoc($query_sum);
+        // $row_id_cart = mysqli_fetch_assoc($query_id_cart);
+        // $row_cek_id_item = mysqli_fetch_assoc($query_cek_id_item);
+        
+        $total = mysqli_fetch_assoc(mysqli_query($db, "SELECT SUM(a.HARGA) FROM BARANG a JOIN CART_ITEM b 
+        ON a.ID_BARANG = b.ID_BARANG WHERE ID_CART = '$id_cart'"));
+            $jumlah = 0;
+        $jumlah_1 = mysqli_query($db, "SELECT * FROM BARANG a JOIN CART_ITEM b ON a.ID_BARANG = b.ID_BARANG WHERE ID_CART = '$id_cart'");
+            while ($tabel = mysqli_fetch_assoc($jumlah_1)) {
+                $data = $tabel['HARGA'];
+                $jumlah = $jumlah+$data;
+            }
+
+        $id_kurang = $_GET['id_cart_item'];
+        $query_kurang = mysqli_query($db, "SELECT * FROM CART_ITEM WHERE ID_CART_ITEM = '$id_kurang'");
+        $row_kurang = mysqli_fetch_assoc($query_kurang);
+        $hitung_kurang = $row_kurang['QUANTITY'];
+        $hitung_kurang--;
+        mysqli_query($db, "UPDATE CART_ITEM SET QUANTITY = '$hitung_kurang' WHERE ID_CART_ITEM = '$id_kurang'");
+    }
+
+    if(isset($_POST['tmbh_keranjang'])){
+            // $id = $_GET['id_user'];
     $query_cek_id = mysqli_query($db, "SELECT * FROM CART");
     $query_cek_id_item = mysqli_query($db, "SELECT * FROM CART_ITEM");
     
@@ -15,6 +80,12 @@
     
     $total = mysqli_fetch_assoc(mysqli_query($db, "SELECT SUM(a.HARGA) FROM BARANG a JOIN CART_ITEM b 
     ON a.ID_BARANG = b.ID_BARANG WHERE ID_CART = '$id_cart'"));
+        $jumlah = 0;
+    $jumlah_1 = mysqli_query($db, "SELECT * FROM BARANG a JOIN CART_ITEM b ON a.ID_BARANG = b.ID_BARANG WHERE ID_CART = '$id_cart'");
+        while ($tabel = mysqli_fetch_assoc($jumlah_1)) {
+            $data = $tabel['HARGA'];
+            $jumlah = $jumlah+$data;
+        }
     // echo $total;
 
     // if (isset($_POST['lanjutkan'])) {
@@ -26,18 +97,13 @@
     //   }
     
 
-    $jumlah = 0;
-    $jumlah_1 = mysqli_query($db, "SELECT * FROM BARANG a JOIN CART_ITEM b ON a.ID_BARANG = b.ID_BARANG WHERE ID_CART = '$id_cart'");
-        while ($tabel = mysqli_fetch_assoc($jumlah_1)) {
-            $data = $tabel['HARGA'];
-            // return $data;
-            $jumlah = $jumlah+$data;
-        }
+
         // echo "HASILNYA" . $jumlah;
         
 
     // $id_user = $_GET['id_user'];
     // Cek id cart
+
 
     var_dump($id_cart);
     $id = $_GET['id'];
@@ -45,18 +111,17 @@
     echo " Ini ID = ".$id;
     $cek_id = $id;
     
-    if ($cek_id_barang !== $id){
+    
         while($row = mysqli_fetch_assoc($query_cek_id_item) ){
             // var_dump($cek_id_barang);
             echo "<br>";
+            $cek_id_barang = $row['ID_BARANG'];
                 if ($cek_id_barang === $id){
                     break;
                 }
-    
-                $cek_id_barang = $row['ID_BARANG'];
                 echo " ID_BARANG = " .$cek_id_barang;
             }
-    }
+    
     echo "<br>";
     echo "<br>";
 
@@ -81,10 +146,9 @@ if(isset($_POST['tmbh_keranjang'])){
         
         // var_dump($id);
         
-        while($cek_id_barang){
             $quantity++;
             mysqli_query($db, "UPDATE CART_ITEM SET QUANTITY = '$quantity' WHERE ID_BARANG = '$id'");
-        }
+        
         
         echo "<H5>Gagal Update</H5>";
     }
@@ -98,6 +162,8 @@ if(isset($_POST['tmbh_keranjang'])){
     // }
     // var_dump($_GET['id']);
     // $query = mysqli_fetch_assoc($db, "SELECT * FROM cart_item");
+
+    }
 
 ?>
 
@@ -161,7 +227,7 @@ if(isset($_POST['tmbh_keranjang'])){
     <div class="row">
         <div class="col-12">
             <div class="table-responsive">
-                <form action="" method="post">
+                <!-- <form action="cart_item.php" method="post"> -->
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -169,12 +235,20 @@ if(isset($_POST['tmbh_keranjang'])){
                                 <th scope="col">Product</th>
                                 <th scope="col">Available</th>
                                 <th scope="col" class="text-center">Quantity</th>
+                                <!-- <th></th> -->
+                                <th scope="col">Aksi</th>
+                                
+                                
                                 <th scope="col" class="text-right">Price</th>
                                 <th> </th>
                             </tr>
                         </thead>
                         <tbody>
                         <?php 
+
+                            
+
+                        
                         // WHERE ID_CART = '$id'
                             $query = mysqli_query($db, "SELECT * FROM CART_ITEM a JOIN BARANG b ON b.ID_BARANG = a.ID_BARANG");
                             while ($row = mysqli_fetch_assoc($query)) : 
@@ -183,7 +257,20 @@ if(isset($_POST['tmbh_keranjang'])){
                                 <td><img src="https://dummyimage.com/50x50/55595c/fff" /> </td>
                                 <td><?= $row['NAMA_BARANG']; ?></td>
                                 <td><?= $row['STOK']; ?></td>
-                                <td><input class="form-control" type="text" name="banyak" id="banyak"/></td>
+                                <td>
+                                    <!-- <input class="form-control" type="text" name="banyak" id="banyak" /> -->
+                                    <?= $row['QUANTITY'] ?>
+                                </td>
+                                <form action="cart-item.php?id_cart_item=<?= $row['ID_CART_ITEM'] ?>" method="post">
+                                    <td>
+                                        <a href="cart-item.php?id_cart_item=<?= $row['ID_CART_ITEM'] ?>">
+                                            <button type="submit" class="btn btn-primary" name="tambah">+</button>
+                                        </a>
+                                        <a href="cart-item.php?id_cart_item=<?= $row['ID_CART_ITEM'] ?>">
+                                            <button type="submit" class="btn btn-danger" name="kurang" style="margin-left: 10px;">-</button>
+                                        </a>
+                                    </td>
+                                </form>
                                 <!-- <td><input type="text" name="quantity"></td> -->
                                 <td class="text-right">Rp.<?= $row['HARGA'] ?></td>
                                 <!-- <td></td> -->
@@ -210,10 +297,10 @@ if(isset($_POST['tmbh_keranjang'])){
                     </table>
                     <div class="col-sm-12 col-m d-6 text-right">
                         <a href="checkout.php?id_cart=<?= $row_id_cart['ID_CART'] ?>">
-                            <button class="btn btn-lg btn-block btn-success text-uppercase"  type="button" name="lanjutkan">Lanjutkan</button>
+                            <button class="btn btn-lg btn-block btn-success text-uppercase"  type="submit" name="lanjutkan">Lanjutkan</button>
                         </a>
                     </div>
-                </form>
+                <!-- </form> -->
             </div>
         </div>
         <!-- <div class="col mb-2">
