@@ -1,10 +1,12 @@
 <?php 
     include "config.php";
 
+    $query_id_cart = mysqli_query($db, "SELECT * FROM cart");
+    $query_cek_id_cart = mysqli_fetch_assoc($query_id_cart);
+    $id_cart = $query_cek_id_cart['ID_CART'];
+
     if (isset($_POST['tambah'])) {
-        $query_id_cart = mysqli_query($db, "SELECT * FROM cart");
-        $query_cek_id_cart = mysqli_fetch_assoc($query_id_cart);
-        $id_cart = $query_cek_id_cart['ID_CART'];
+
         // $query_sum = mysqli_query($db, "SELECT SUM(a.HARGA) FROM BARANG a JOIN CART_ITEM b 
         // ON a.ID_BARANG = b.ID_BARANG WHERE ID_CART = '$id_cart'");
         // $row_sum = mysqli_fetch_assoc($query_sum);
@@ -33,7 +35,8 @@
             $id_barang_tambah = $row_tambah_stok['ID_BARANG'];
 
 
-        $total_tambah = ($row_tambah_stok['QUANTITY'] - $row_tambah_stok['STOK']);
+        $total_tambah = ($row_tambah_stok['STOK'] - 1);
+        
         echo $total_tambah;
         mysqli_query($db, "UPDATE BARANG SET STOK = '$total_tambah' WHERE ID_BARANG = '$id_barang_tambah'");
         
@@ -295,11 +298,13 @@ if(isset($_POST['tmbh_keranjang'])){
                         </tr>
                         </tbody>
                     </table>
-                    <div class="col-sm-12 col-m d-6 text-right">
-                        <a href="checkout.php?id_cart=<?= $row_id_cart['ID_CART'] ?>">
-                            <button class="btn btn-lg btn-block btn-success text-uppercase"  type="submit" name="lanjutkan">Lanjutkan</button>
-                        </a>
-                    </div>
+                    <form action="checkout.php?" method="post">
+                        <div class="col-sm-12 col-m d-6 text-right">
+                            <a href="checkout.php?id_cart=<?= $query_cek_id_cart['ID_CART'] ?>">
+                                <button class="btn btn-lg btn-block btn-success text-uppercase"  type="submit" name="lanjutkan">Lanjutkan</button>
+                            </a>
+                        </div>
+                    </form>
                 <!-- </form> -->
             </div>
         </div>
@@ -309,11 +314,11 @@ if(isset($_POST['tmbh_keranjang'])){
                     <a href="pilih.php"><button class="btn btn-block btn-light">Continue Shopping</button>
                 </a>    
                 </div> -->
-                <div class="col-sm-12 col-md-6 text-right">
+                <!-- <div class="col-sm-12 col-md-6 text-right">
                     <a href="checkout.php?id_cart=<?= $row_id_cart['ID_CART'] ?>">
                         <button class="btn btn-lg btn-block btn-success text-uppercase"  type="button" name="lanjutkan">Lanjutkan</button>
                     </a>
-                </div>
+                </div> -->
             </div>
         </div> -->
     </div>

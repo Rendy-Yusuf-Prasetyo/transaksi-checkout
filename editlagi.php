@@ -13,7 +13,9 @@ if (isset($_POST['submit'])) {
        header("Location: pilih.php");
        
     }
-
+    $query = mysqli_query($db,"SELECT * FROM PELANGGAN");
+    $row = mysqli_fetch_assoc($query);
+    var_dump($row['ID_PELANGGAN']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -91,7 +93,7 @@ if (isset($_POST['submit'])) {
                     <label for="deskripsi" class="form-label">Deskripsi</label>
                     <input type="name" class="form-control" id="deskripsi" name="deskripsi" placeholder="<?= $row['DESKRIPSI']; ?>">
                 </div>
-                    <a href="editlagi.php?id=<?= $_GET['id']; ?>" >
+                    <a href="editlagi.php?id_user=<?= $row['ID_PELANGGAN']; ?>" >
                         <button type="submit" class="btn btn-primary" name="submit">Save changes</button>
                     </a>
             </form>

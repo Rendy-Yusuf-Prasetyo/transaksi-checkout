@@ -173,11 +173,13 @@ if(isset($_GET['id_user'])){
             $query_id_pelanggan = mysqli_query($db, "SELECT * FROM PELANGGAN ");
             $row_id_pelanggan = mysqli_fetch_assoc($query_id_pelanggan);
         ?>
+        <form action="tambah-barang.php?id_user=<?= $row_id_pelanggan['ID_PELANGGAN'] ?>" method="post">
             <div class="tombol">
-                <a href="tambah.php?id=<?= $row_id_pelanggan['ID_PELANGGAN'] ?>">
-                    <button type="submit" class="btn btn-primary ms-3 mb-3">Primary</button>
+                <a href="tambah-barang.php?id_user=<?= $row_id_pelanggan['ID_PELANGGAN'] ?>">
+                    <button type="submit" name="tambah_data" class="btn btn-primary ms-3 mb-3">Tambah data</button>
                 </a>
             </div>
+        </form>
         
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 <?php
@@ -223,7 +225,7 @@ if(isset($_GET['id_user'])){
             </div>
             
             <!-- Modal -->
-            <div class="modal fade" id="keraaaanjang" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <!-- <div class="modal fade" id="keraaaanjang" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -248,7 +250,7 @@ if(isset($_GET['id_user'])){
                         </div>
                     </div>
                   </div>
-            </div>
+            </div> -->
         </div>
     </div>
 
