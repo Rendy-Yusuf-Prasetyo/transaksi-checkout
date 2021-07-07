@@ -7,90 +7,47 @@ include "config.php";
         $harga = $_POST['harga'];
         $stok = $_POST['stok'];
         $deksripsi = $_POST['deskripsi'];
-        $foto = $_POST['foto'];
+        // $foto = $_POST['file'];
 
-        $targer_dir = "gambar/";
-        $name_photo = $_FILES['foto']['name'];
-        $target_file = $targer_dir . basename($name_photo);
-        $uploadOK = 1;
-        $image_file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        // $targer_dir = "gambar/";
+        // $name_photo = $_FILES['file']['name'];
+        // $target_file = $targer_dir . basename($name_photo);
+        // $uploadOK = 1;
+        // $image_file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
         // CEK GAMBARNYA BENERAN APA GA
         
-        $check = getimagesize($_FILES['foto']['tmp_name']);
-        if($check === true){
-            echo "File is an image - " . $check["mie"] . ".";
-            $uploadOK = 1;
-        }else{
-            // echo "File is not an image";
-            echo "
-                <script>
-                    alert('File is not an image');
-                </script>
-            ";
-            $uploadOK = 0;
-        }
+            
+        $ekstensi_diperboleh = array('png', 'jpg');
+        $nama_foto = basename($_FILES['file']['name']);
+        $x = explode('.', $nama_foto);
+        $ekstensi = strtolower(end($x));
+        $ukuran = $_FILES['file']['size'];
+        $file_temp = $_FILES['file']['tmp_name'];
 
-        // CEK FILE SUDAH ADA APA BELUM
-        if(file_exists($target_file)){
-            // echo "File already exist";
-            echo "
-            <script>
-                alert('File already exist');
-            </script>
-            ";
-            $uploadOK = 0;
-        }
-
-        // CEK UKURAN FILE
-        if($_FILES['foto']['size'] > 500000){
-            // echo "File is too large";
-            echo "
-            <script>
-                alert('File is too large');
-            </script>
-            ";
-            $uploadOK = 0;
-        }
-
-        // Format yang dibolehkan
-        if($image_file_type != "jpg" && $image_file_type != "png" && $image_file_type != "jpeg" && $image_file_type != "gif"){
-            // echo "File not allowed format";
-            echo "
-            <script>
-                alert('File not allowed format');
-            </script>
-            ";
-            $uploadOK = 0;
-        }
-
-        // cek jika $uploadOK = 0 itu error
-        if($uploadOK == 0){
-            echo "File was not uploaded";
-            echo "
-            <script>
-                alert('File was not uploaded');
-            </script>
-            ";
-            // if not = 0
-        }else{
-            if (move_uploaded_file($_FILES['foto']['tmp_name'], $target_file)) {
-                echo "the File" . htmlspecialchars(basename($_FILES['foto']['tmp_name'])) . "has been uploaded";
-            }else{
-                echo "Sorry, there was an error uploading your file.";
+        if(in_array($ekstensi, $ekstensi_diperboleh) === true){
+            if($ukuran > 10440700){
+            
                 echo "
-                <script>
-                    alert('Sorry, there was an error uploading your file.');
-                </script>
+                    <script>
+                        alert('Ukuran File Terlalu Besar');
+                    </script>
                 ";
             }
+        }else{
+            echo "
+                <script>
+                    alert('Eksetensi Yang diperbolehkan Hanya jpg dan png');
+                </script>
+            ";
         }
-
+        move_uploaded_file($file_temp, 'gambar/' . $nama_foto);
         $cek_nama_barang = mysqli_query($db, "SELECT * FROM barang");
+                
         while($row_nama_barang = mysqli_fetch_assoc($cek_nama_barang)){
             $nama_barang = $row_nama_barang['NAMA_BARANG'];
             if ($nama_barang == null) {
-                mysqli_query($db, "INSERT INTO BARANG VALUES(2001, '$nama', '$harga', '$stok', '$deksripsi', $name_photo)");
+                mysqli_query($db, "INSERT INTO BARANG VALUES(2001, '$nama', '$harga', '$stok', '$deksripsi', '$nama_foto')");
                 echo "
                     <script>
                         alert('Data sukses ditambahkan');
@@ -98,7 +55,7 @@ include "config.php";
                 ";
                 break;
             }else if($nama_barang != $nama){
-                mysqli_query($db, "INSERT INTO BARANG VALUES('', '$nama', '$harga', '$stok', '$deksripsi', '$name_photo)");
+                mysqli_query($db, "INSERT INTO BARANG VALUES('', '$nama', '$harga', '$stok', '$deksripsi', '$nama_foto')");
                 echo "
                     <script>
                         alert('Data sukses ditambahkan');
@@ -107,13 +64,13 @@ include "config.php";
                 break;
             }else if($nama_barang == $nama){
                 echo "
-                <script>
-                    alert('Data Gagal ditambahkan');
-                </script>
-            ";
+                    <script>
+                        alert('Data Gagal ditambahkan');
+                    </script>
+                ";
             // break;
             }
-        }   
+        }
         // $row_id_barang = mysqli_fetch_assoc($cek_id_barang);
 
         // mysqli_query($db, "INSERT INTO BARANG VALUES('', '$nama', '$harga', '$stok', '$deksripsi')");
@@ -140,7 +97,7 @@ include "config.php";
 <body>
 <div class="container">
         <div class="row">
-            <form action="" method="post enctype="multipart/form-data">
+            <form action="" method="post" enctype="multipart/form-data">
                 <div class="mb-3 mt-3">
                     <label for="nama">Nama</label>
                     <input type="text" class="form-control" name="nama" id="nama" name="address" required>
@@ -160,7 +117,7 @@ include "config.php";
                 <div class="mb-3">
                     <!-- <label class="input-group-text" for="inputGroupFile01">Upload Gambar</label> -->
                     <label for="foto">Input Foto</label>
-                    <input type="file" class="form-control" name="foto" id="foto">
+                    <input type="file" class="form-control" name="file" id="foto">
                 </div>
                 <div class="mb-3">
                     <button type="submit" name="simpan" class="btn btn-primary">simpan</button>
